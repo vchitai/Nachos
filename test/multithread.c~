@@ -1,0 +1,12 @@
+#include "syscall.h"
+int
+main()
+{	
+	int pid;
+	Exec("../test/printa");
+	pid = Exec("../test/printb");
+	
+	PrintString("Huh?\n");
+	Join(pid);	
+	Exit(0);
+}

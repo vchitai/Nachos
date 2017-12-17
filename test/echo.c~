@@ -1,0 +1,22 @@
+#include "syscall.h"
+#include "copyright.h"
+
+int main(int argc, char* argv[])
+{
+	char mess[MAX_LENGTH_STRING];
+	unsigned int i ;
+	OpenFileID inConsole = OpenFileSyscall("stdin", STDIN_TYPE);
+	OpenFileID outConsole = OpenFileSyscall("stdout", STDOUT_TYPE);
+	if (inConsole == -1 || outConsole == -1)
+	{
+		PrintString("Can not open console\n");
+		return 0;
+	}
+	ReadFile(mess, MAX_LENGTH_STRING, inConsole); 
+	
+	
+	WriteFile(mess, MAX_LENGTH_STRING, outConsole);
+	CloseFile(inConsole);
+	CloseFile(outConsole);
+	return 0;
+}

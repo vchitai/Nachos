@@ -1,0 +1,106 @@
+#include "ptable.h"
+#include "system.h"
+
+PTable::PTable()
+{		
+	bm = new BitMap(MAXPROCESS);
+	bmsem = new Semaphore("Bitmap Semaphore", 1);
+	for (int i = 0; i<MAXPROCESS; i++)
+		pcb[i] = NULL;
+}
+
+PTable::~PTable() {
+	for (int i = 0; i<MAXPROCESS; i++)
+		if (pcb[i]!=NULL)
+			delete pcb[i];
+	delete bm;
+	delete bmsem;
+}
+
+int PTable::ExecUpdate(char* name) {  
+	if (name == NULL) {
+		printf("Exec file name is invalid\n");		
+		return -1;	
+	}
+
+	char* cname = currentThread->getName();
+	if (strcmp(name, cname) == 0) {
+		printf("Process %s call itself\n", cname);
+		return -1;
+	}
+
+	OpenFile *executable = fileSystem->Open(name);
+    	if (executable == NULL) {
+		printf("Unable to open file\n");
+		return -1;
+    	}
+	delete executable;
+
+	bmsem->P();
+	int freeSlot = bm->Find();
+	bmsem->V();
+
+	if (freeSlot == -1) {
+		printf("Not enough space \n");
+		return -1;
+	} 
+	
+	pcb[freeSlot] = new PCB();
+	
+	int result = pcb[freeSlot]->Exec(name,freeSlot);
+	if (result == -1) {
+		bm->Clear(freeSlot);
+		delete pcb[freeSlot];
+		return -1;	
+	}
+	return result;
+}
+
+int PTable::ExitUpdate(int ec) {
+	int prid = currentThread->processID;
+	int paid = currentThread->parrentID;
+	
+	if (prid == -1)
+		return -1;
+	if (paid == -1) {
+		interrupt->Halt();
+	}
+	else {
+		pcb[prid]->SetExitCode(ec);
+		pcb[paid]->DecNumWait();
+		pcb[paid]->JoinRelease(prid);
+		pcb[prid]->ExitWait();
+
+		delete currentThread->space;
+		bm->Clear(prid);
+		delete pcb[prid];
+		pcb[prid] = NULL;
+
+		currentThread->Finish();
+	}
+	return 0;
+}
+
+int PTable::JoinUpdate(int id) {	
+	int cId = currentThread->processID;
+	if (id == cId) {
+		printf("Cannot join itself\n");
+		return -1;	
+	}	
+
+	if (!bm->Test(id)) {
+		printf("Process to be joined not found\n");
+		return -1;	
+	}
+
+	if (pcb[id]->parrentID != cId) {
+		printf("Cannot join process other than parent\n");
+		return -1;		
+	}
+	printf("%s joining %s\n", pcb[id]->GetFileName(), currentThread->getName());
+	pcb[cId]->IncNumWait();
+	pcb[cId]->JoinWait(id);
+	int ec = pcb[id]->GetExitCode();
+	pcb[id]->ExitRelease();
+	return ec;
+}

@@ -1,0 +1,7 @@
+#include "syscall.h"
+int
+main()
+{
+	PrintString("This is an help program");
+	Halt();
+}

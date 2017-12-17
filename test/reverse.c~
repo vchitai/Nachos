@@ -1,0 +1,37 @@
+#include "syscall.h"
+#include "copyright.h"
+
+int main(int argc, char* argv[])
+{
+	char c;
+	OpenFileID srcId;
+	OpenFileID dstId;
+	char source[MAX_LENGTH_STRING], dest[MAX_LENGTH_STRING];
+	int srcSz, srcPos;
+	PrintString("Nhap file source: \n");
+	ReadString(source, MAX_LENGTH_STRING);
+	PrintString("Nhap file dest: \n");
+	ReadString(dest, MAX_LENGTH_STRING);
+
+	srcId = OpenFileSyscall(source, 1);
+	CreateFile(dest);
+	dstId = OpenFileSyscall(dest, 0);
+
+	srcSz = SeekFile(-1, srcId);
+	SeekFile(0, dstId);
+	 
+	while (srcSz>=0)
+	{	
+		srcSz --;
+		SeekFile(srcSz, srcId);
+		ReadFile(&c, 1, srcId);
+		WriteFile(&c, 1, dstId);
+		PrintChar(c);
+	}
+
+	CloseFile(srcId);
+	CloseFile(dstId);
+
+	Halt();
+}
+

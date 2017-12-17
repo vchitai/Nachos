@@ -1,0 +1,45 @@
+#include "syscall.h"
+int
+main()
+{	
+	OpenFileID voinuoc, output;
+	char c[1];
+	int  next, currentSinhVien, voi1, voi2;
+	output = OpenFileSyscall("result.txt",0);
+	voi1 = 0;
+	voi2 = 0;
+	while (1) {
+		Wait("voinuoc");
+		voinuoc = OpenFileSyscall("voinuoc.txt",1);
+		currentSinhVien = 0;
+		next = 0;
+		while (ReadFile(c,1,voinuoc)>0) {
+			if (c[0] == '~') {
+				next = 1;
+				break;
+			}
+			if (c[0] == ' ' || c[0] == '\n') {
+				break;
+			}
+			currentSinhVien = currentSinhVien*10 + (c[0]-'0');
+		}	
+		if (voi2 < voi1) {
+			WriteFile("2 ",2,output);
+			voi2 = voi2 + currentSinhVien;
+		} else {
+			WriteFile("1 ",2,output);
+			voi1 = voi1 + currentSinhVien;
+		}
+		if (next == 1) {
+			WriteFile("\n",1,output);
+			CloseFile(voinuoc);
+			Signal("sinhvien");
+			break;
+		}
+		CloseFile(voinuoc);
+		Signal("sinhvien");
+	}
+	CloseFile(output);
+	PrintString("voinuoc exiting...\n");
+	Exit(0);
+}

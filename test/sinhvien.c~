@@ -1,0 +1,42 @@
+#include "syscall.h"
+int
+main()
+{	
+	OpenFileID sinhvien, voinuoc;
+	char c[1];
+	int vn, next, writed;	
+	sinhvien = OpenFileSyscall("sinhvien.txt",0);
+	vn = Exec("../test/voinuoc");
+
+	while (1) {
+		next = 0;
+		voinuoc = OpenFileSyscall("voinuoc.txt",0);
+		writed = 0;
+		while (ReadFile(c,1,sinhvien) > 0) {
+			writed++;
+			PrintChar(c[0]);PrintString("writed: ");
+		PrintInt(writed);
+			if (c[0] == '\n') {
+				WriteFile("~",1,voinuoc);
+				next = 1;
+				break;
+			}	
+			if (c[0] == ' ')
+				break;	
+			WriteFile(c,1,voinuoc);	
+		}
+		CloseFile(voinuoc);
+		Signal("voinuoc");	
+		Wait("sinhvien");
+		voinuoc = OpenFileSyscall("voinuoc.txt",0);
+		while (writed--) {
+			WriteFile("\n",1,voinuoc);
+		}
+		CloseFile(voinuoc);
+		if (next == 1)
+			break;
+	}
+	PrintString("sinhvien exiting...\n");
+	CloseFile(sinhvien);
+	Exit(0);
+}

@@ -29,6 +29,7 @@ SynchDisk   *synchDisk;
 
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers
+//Khai bao bien toan cuc su dung trong chuong trinh
 SynchConsole *gSynchConsole;
 Semaphore* addrLock;
 BitMap* gPhysPageBitMap;
@@ -154,6 +155,7 @@ Initialize(int argc, char **argv)
     
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
+    //Khoi tao cac bien toan cuc se su dung
     addrLock = new Semaphore("Address Lock",1);
     gPhysPageBitMap = new BitMap(NumPhysPages);
     semTab = new STable();

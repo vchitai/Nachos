@@ -59,7 +59,7 @@ SwapHeader (NoffHeader *noffH)
 //
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
-
+/*
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     NoffHeader noffH;
@@ -97,7 +97,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 					// a separate page, we could set its 
 					// pages to be read-only
     }
-    /*
+    
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
     bzero(machine->mainMemory, size);
@@ -115,58 +115,9 @@ AddrSpace::AddrSpace(OpenFile *executable)
 			noffH.initData.virtualAddr, noffH.initData.size);
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
-    }*/
-
-	
-    int tempPageSize, firstPage, firstPageSize, lastPage, lastPageSize, inFileAddr;
-
-    if (noffH.code.size > 0) {
-        inFileAddr = noffH.code.inFileAddr;
-        firstPage = noffH.code.virtualAddr / PageSize;
-        tempPageSize = PageSize - noffH.code.virtualAddr % PageSize;
-
-        if (tempPageSize < noffH.code.size) {
-            firstPageSize = tempPageSize;
-            lastPage = (noffH.code.virtualAddr+noffH.code.size) / PageSize;
-            lastPageSize = (noffH.code.virtualAddr+noffH.code.size) % PageSize;
-        } else {
-            firstPageSize = noffH.code.size;
-            lastPage = firstPage + 1;
-            lastPageSize = 0;
-        }
-
-        executable->ReadAt(&(machine->mainMemory[pageTable[firstPage].physicalPage*PageSize + PageSize - tempPageSize]), firstPageSize, inFileAddr);
-        if (lastPageSize != 0)
-            executable->ReadAt(&(machine->mainMemory[pageTable[lastPage].physicalPage*PageSize]), lastPageSize, inFileAddr + firstPageSize + (lastPage-firstPage-1)*PageSize);
-        for (i = firstPage+1; i < lastPage; ++i) 
-            executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]), PageSize, inFileAddr + firstPageSize + (i-firstPage-1)*PageSize);
     }
 
-    if (noffH.initData.size > 0) {
-        inFileAddr = noffH.initData.inFileAddr;
-        firstPage = noffH.initData.virtualAddr / PageSize;
-        tempPageSize = PageSize - noffH.initData.virtualAddr % PageSize;
-
-        if (tempPageSize < noffH.initData.size) {
-            firstPageSize = tempPageSize;
-            lastPage = (noffH.initData.virtualAddr+noffH.initData.size) / PageSize;
-            lastPageSize = (noffH.initData.virtualAddr+noffH.initData.size) % PageSize;
-        } else {
-            firstPageSize = noffH.initData.size;
-            lastPage = firstPage + 1;
-            lastPageSize = 0;
-        }
-
-        executable->ReadAt(&(machine->mainMemory[pageTable[firstPage].physicalPage*PageSize + PageSize - tempPageSize]), firstPageSize, inFileAddr);
-
-        if (lastPageSize != 0)
-            executable->ReadAt(&(machine->mainMemory[pageTable[lastPage].physicalPage*PageSize]), lastPageSize, inFileAddr + firstPageSize + (lastPage-firstPage-1)*PageSize);
-
-        for (i = firstPage+1; i < lastPage; ++i) 
-            executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]), PageSize, inFileAddr + firstPageSize + (i-firstPage-1)*PageSize);
-    }
-
-}
+}*/
 AddrSpace::AddrSpace(char * filename)
 {
 	NoffHeader noffH;

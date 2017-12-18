@@ -8,15 +8,15 @@
 
 class STable {
 private:
-	BitMap* bm;
-	Sem* semTab[MAXSEMAPHORE];
-	int FindSem(char* name);
+	BitMap* bm;                //Bitmap quan ly vi tri Semaphore
+	Sem* semTab[MAXSEMAPHORE]; //Mang cac Sem quan ly Semaphore
+	int FindSem(char* name);   //Ham tra ve vi tri mot Semaphore co ten name
 public:
-	STable();
-	~STable();
-	int Create(char* name, int init);
-	int Wait(char* name);
-	int Signal(char* name);
-	int FindFreeSlot(int id);
+	STable();                  //Ham khoi tao STable
+	~STable();                 //Ham huy STable
+	int Create(char* name, int init); //Ham tao Semaphore voi ten name, gia tri khoi tao init
+	int Wait(char* name);      //Ham bao hieu Semaphore name doi
+	int Signal(char* name);    //Ham bao hieu Semaphore name duoc tiep tuc
+	int FindFreeSlot(int id);  //Ham tim vi tri trong trong bang Semaphore
 };
 #endif

@@ -31,12 +31,14 @@ extern Timer *timer;				// the hardware alarm clock
 
 #ifdef USER_PROGRAM
 #include "machine.h"
+//Khai bao thu vien nguoi dung viet su dung trong chuong trinh
 #include "synchcons.h"
 #include "synch.h"
 #include "bitmap.h"
 #include "stable.h"
 #include "ptable.h"
 extern Machine* machine;	// user program memory and registers
+//Khai bao bien toan cuc su dung trong chuong trinh
 extern SynchConsole *gSynchConsole;
 extern Semaphore* addrLock;
 extern BitMap* gPhysPageBitMap;

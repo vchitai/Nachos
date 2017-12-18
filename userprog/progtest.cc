@@ -39,6 +39,7 @@ StartProcess(char *filename)
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
 */
+    //Su dung ham khoi tao Process cua nhom
     pTab->ExecUpdate(filename);
     machine->Run();			// jump to the user progam
     ASSERT(FALSE);			// machine->Run never returns;

@@ -415,10 +415,13 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_Exec:
 				{
+					//Doc ten chuong trinh tu user space
 					int name_userS;
 					name_userS = machine->ReadRegister(4);
+					//Chep noi dung vao kernel space
 					char* name_kernelS;
 					name_kernelS = machine->User2System(name_userS,MAX_LENGTH_STRING);
+					//Chep thanh cong thi thuc thi chuong trinh, khong thi thong bao loi
 					if (name_kernelS != NULL) {
 						int result;
 						result = pTab->ExecUpdate(name_kernelS);
@@ -432,8 +435,10 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_Join:
 				{
+					//Doc joinID cua tien trinh
 					int joinID;
 					joinID = machine->ReadRegister(4);
+					//Bat dau join va tra ve ket qua
 					int result;
 					result = pTab->JoinUpdate(joinID);
 					machine->WriteRegister(2,result);
@@ -441,8 +446,10 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_Exit:
 				{
+					//Doc exitStatus cua tien trinh
 					int exitStatus;
 					exitStatus = machine->ReadRegister(4);
+					//Bat dau exit va tra ve ket qua
 					int result;
 					result = pTab->ExitUpdate(exitStatus);
 					machine->WriteRegister(2,result);
@@ -450,13 +457,14 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_CreateSemaphore:
 				{
+					//Doc thong tin ten va gia tri Semaphore
 					int nameAddr;
 					nameAddr = machine->ReadRegister(4);
 					int semval;
 					semval = machine->ReadRegister(5);
 					char* name;
 					name = machine->User2System(nameAddr,MAX_LENGTH_STRING);
-
+					//Khoi tao Semaphore
 					int result;
 					result = semTab->Create(name,semval);
 					machine->WriteRegister(2,result);
@@ -464,11 +472,12 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_Wait:
 				{
+					//Doc ten Semaphore vao kernel space
 					int nameAddr;
 					nameAddr = machine->ReadRegister(4);
 					char* name;
 					name = machine->User2System(nameAddr,MAX_LENGTH_STRING);
-
+					//Thong bao Semaphore cho
 					int result;
 					result = semTab->Wait(name);
 					machine->WriteRegister(2,result);
@@ -476,11 +485,12 @@ void ExceptionHandler(ExceptionType which)
 				}
 				case SC_Signal:
 				{
+					//Doc ten Semaphore vao kernel space
 					int nameAddr;
 					nameAddr = machine->ReadRegister(4);
 					char* name; 
 					name = machine->User2System(nameAddr,MAX_LENGTH_STRING);
-
+					//Thong bao Semaphore tiep tuc
 					int result;
 					result = semTab->Signal(name);
 					machine->WriteRegister(2,result);

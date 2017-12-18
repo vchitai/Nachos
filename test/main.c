@@ -6,6 +6,8 @@ main()
 	int sv;
 	int n, tmp, writed;
 	char c[1];
+
+	//Khoi tao cac file can thiet, neu khong thanh cong Exit
 	if (CreateFile("output.txt") == -1)
 		Exit(-1);
 	if (CreateFile("sinhvien.txt") == -1)
@@ -18,10 +20,16 @@ main()
 		Exit(-1);
 	if (CreateSemaphore("voinuoc",0) == -1)
 		Exit(-1);
+
+	//Mo file input va output
 	input = OpenFileSyscall("input.txt",0);
 	output = OpenFileSyscall("output.txt",0);
 	if (input == -1)
 		Exit(-1);
+	if (output == -1)
+		Exit(-1);
+
+	//Doc so luot sinh vien vao lay nuoc
 	n = 0;
 	while (ReadFile(c,1,input)!=0) {
 		if (c[0] == '\n')
@@ -29,7 +37,10 @@ main()
 		if (c[0] >='0' && c[0] <='9')
 			n = 10*n + c[0] - '0';
 	}
+
+	//Ung voi tung luot sinh vien vao lay nuoc
 	while (n--) {
+		//Mo file sinh vien va ghi cac sinh vien lay nuoc dot nay
 		sinhvien = OpenFileSyscall("sinhvien.txt",0);
 		writed = 0;
 		while (ReadFile(c,1,input)>0) {
@@ -42,6 +53,7 @@ main()
 		}
 		CloseFile(sinhvien);
 		
+		//Goi thuc thi chuong trinh sinh vien, nhan thong bao loi va thoat
 		sv = Exec("../test/sinhvien");
 		if (sv!=-1) 
 			tmp = Join(sv);
@@ -50,12 +62,14 @@ main()
 			Exit(-1);		
 		}	
 		
+		//Dat lai noi dung file sinh vien
 		sinhvien = OpenFileSyscall("sinhvien.txt",0);	
 		while (writed--) {
 			WriteFile("\n",1,sinhvien);
 		}
 		CloseFile(sinhvien);
 		
+		//Lay ket qua tu file result va ghi vao file output
 		writed = 0;
 		result = OpenFileSyscall("result.txt",1);
 		while (ReadFile(c,1,result)>0) {
@@ -64,6 +78,8 @@ main()
 			if (c[0] == '\n')
 				break;		
 		}
+
+		//Dat lai noi dung file result
 		SeekFile(0,result);
 		while (writed--) {
 			WriteFile("\n",1,result);

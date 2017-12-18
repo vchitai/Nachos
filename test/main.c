@@ -3,7 +3,7 @@ int
 main()
 {	
 	OpenFileID input, output, sinhvien, result;
-	int sv;
+	SpaceID sv;
 	int n, tmp, writed;
 	char c[1];
 

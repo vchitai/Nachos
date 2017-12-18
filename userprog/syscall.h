@@ -94,6 +94,7 @@ int Join(SpaceId id);
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;	
 typedef int OpenFileID;
+typedef int SpaceID;
 /* when an address space starts up, it has two open files, representing 
  * keyboard input and display output (in UNIX terms, stdin and stdout).
  * Read and Write can be used directly on these, without first opening

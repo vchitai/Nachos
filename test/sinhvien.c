@@ -5,7 +5,8 @@ main()
 {	
 	OpenFileID sinhvien, voinuoc;
 	char c[1];
-	int vn, next, writed;
+	SpaceID vn;
+	int next, writed;
 
 	//Mo file sinhvien.txt va goi chuong trinh voinuoc bat dau thuc hien va doi sinh vien ra hieu	
 	sinhvien = OpenFileSyscall("sinhvien.txt",0);

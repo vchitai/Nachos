@@ -60,7 +60,9 @@ main()
 		result = OpenFileSyscall("result.txt",1);
 		while (ReadFile(c,1,result)>0) {
 			WriteFile(c,1,output);
-			writed++;		
+			writed++;
+			if (c[0] == '\n')
+				break;		
 		}
 		SeekFile(0,result);
 		while (writed--) {
